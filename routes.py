@@ -2,10 +2,18 @@
 # IMPORTS #
 ###########
 
+# STANDARD LIBRARY
+import os
+import sys
+
 # THIRD PARTY DEPENDENCIES
 from flask_restplus import Resource
 from flask_restplus import Api
 from flask import Flask
+
+# INTERNAL DEPENDENCIES
+sys.path.append('.')
+import analyzer
 
 ###########
 # GLOBALS #
@@ -59,6 +67,12 @@ class User(Resource):
 
     def put(self):
         return http_response(200)
+
+############
+# ANALYSIS #
+############
+
+analysis = api.namespace('Users')
 
 if __name__ == '__main__':
     app.run(debug=True)
