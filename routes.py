@@ -31,7 +31,7 @@ __version__ = '0.1'
 
 # FLASK INITIALIZATION
 app = Flask(__name__)
-api = Api(app, title='Arrow API')
+api = Api(app, title='Arrow API', version=__version__)
 
 # DATABASE INITIALIZATION
 
@@ -41,7 +41,7 @@ api = Api(app, title='Arrow API')
 # FUNCTIONS #
 #############
 
-def http_response(code, message=None):
+def http_response(code, message=None, **kwargs):
     response = {'code': code}
     if message:
         response['messsage'] = message
@@ -51,28 +51,36 @@ def http_response(code, message=None):
         response['status'] = 'error'
     elif 500 <= code < 600:
         response['status'] = 'failure'
-    
+    response.update(kwargs)   
+    return response
 
 #########
 # USERS #
 #########
 
-users = api.namespace('Users')
+users = api.namespace('Users', path='/user')
 
 @users.route('/<string:username>')
 class User(Resource):
 
-    def get(self):
+    def get(self, username):
         return 'Bob'
 
-    def put(self):
+    def put(self, username):
         return http_response(200)
 
 ############
 # ANALYSIS #
 ############
 
-analysis = api.namespace('Users')
+analysis = api.namespace('Analysis', path='/analyze')
+
+@analysis.route('/<string:sentence>')
+class Analysis(Resource):
+
+    def get(self, sentence):
+        score = analyzer.get_sentiment_scores(sentence)
+        return http_response(200, score=score)
 
 if __name__ == '__main__':
     app.run(debug=True)
