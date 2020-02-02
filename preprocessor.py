@@ -1,3 +1,4 @@
+import string
 import gensim
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
@@ -8,24 +9,39 @@ import numpy as np
 np.random.seed(2018)
 
 import nltk
+nltk.download('punkt')
 nltk.download('wordnet')
 
 """
- Tokenization — Split the text into sentences and the sentences into words. 
-    Lowercase the words and remove punctuation.
+    Tokenization — Split the text into sentences and the sentences into words. 
+        Lowercase the words and remove punctuation.
 """
 def tokenize(text):
-    # TODO
-    raise NotImplementedError
+    # Break text into sentences
+    sentences = nltk.sent_tokenize(text)
+     
+    # Tokenize each sentence
+    tokenized_sentences = []
+    for sentence in sentences:
+        # Lowercase the words and remove punctuation
+        tokenized_sent = sentence.translate(None, string.punctuation).lower()
+        tokenized_sentences.append(tokenized_sent)
+    return tokenized_sentences
 
 """
- Lemmatized — words in third person are changed to first person 
-    and verbs in past and future tenses are changed into present
+    Lemmatize — words in third person are changed to first person 
+        and verbs in past and future tenses are changed into present
 
- Stemming — words are reduced to their root form
+    Stemming — words are reduced to their root form
+"""
+def lemmatize_stemming(text):
+    stemmer = SnowballStemmer('english') # Choose a language
+    return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
 
- — Words that have fewer than 3 characters are removed
- — All stopwords are removed
+"""
+    — Lemmatize and stem
+    — Words that have fewer than 3 characters are removed
+    — All stopwords are removed
 """
 def preprocess(text):
     result = []
@@ -34,10 +50,13 @@ def preprocess(text):
             result.append(lemmatize_stemming(token))
     return result
 
-def lemmatize_stemming(text):
-    stemmer = SnowballStemmer('english') # Choose a language
-    return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
-
+"""
+ Preprocess a stream of consciousness from user
+"""
+def preprocess_input(text):
+    tokenized_sentences = tokenize(text)
+    processed_docs = map(preprocess, tokenized_sentences)
+    return processed_docs
 
 """
  Reference:
