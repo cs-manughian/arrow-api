@@ -1,23 +1,64 @@
+###########
+# IMPORTS #
+###########
+
+# THIRD PARTY DEPENDENCIES
+from flask_restplus import Resource
+from flask_restplus import Api
 from flask import Flask
 
+###########
+# GLOBALS #
+###########
+
+# META FLAGS
+__author__ = ['Cosmia', 'Bryce']
+__version__ = '0.1'
+
+# CONSTANTS
+
+##################
+# INITIALIZATION #
+##################
+
+# FLASK INITIALIZATION
 app = Flask(__name__)
+api = Api(app, title='Arrow API')
 
-@app.route('/')
-def homepage():
-    return 'welcome to the Arrow API\n>------|>'
+# DATABASE INITIALIZATION
 
-@app.route('/analyze/<text>')
-def analyze(text):
-    print(text)
-    import random
-    mood = random.choice(['happy', 'sad', 'angry', 'upset'])
-    sentence = random.choice([
-        "Wow! You're really {} today!",
-        "Huh... You seem pretty {}.",
-        "Geez! No need to be so {}!",
-        "You're totally {}. Why? You should write about it using Arrow!"
-    ])
-    return sentence.format(mood)
+
+
+#############
+# FUNCTIONS #
+#############
+
+def http_response(code, message=None):
+    response = {'code': code}
+    if message:
+        response['messsage'] = message
+    if 200 <= code < 300:
+        response['status'] = 'success'
+    elif 300 <= code < 400:
+        response['status'] = 'error'
+    elif 500 <= code < 600:
+        response['status'] = 'failure'
+    
+
+#########
+# USERS #
+#########
+
+users = api.namespace('Users')
+
+@users.route('/<string:username>')
+class User(Resource):
+
+    def get(self):
+        return 'Bob'
+
+    def put(self):
+        return http_response(200)
 
 if __name__ == '__main__':
     app.run(debug=True)
