@@ -12,8 +12,9 @@ from flask_restplus import Api
 from flask import Flask
 
 # INTERNAL DEPENDENCIES
-sys.path.append('.')
+sys.path.append(os.path.dirname(__file__))
 import analyzer
+import database
 
 ###########
 # GLOBALS #
@@ -34,8 +35,7 @@ app = Flask(__name__)
 api = Api(app, title='Arrow API', version=__version__)
 
 # DATABASE INITIALIZATION
-
-
+db = database.Mongo('arrow', 'test')
 
 #############
 # FUNCTIONS #
@@ -64,9 +64,10 @@ users = api.namespace('Users', path='/user')
 class User(Resource):
 
     def get(self, username):
-        return 'Bob'
+        return db.get_user(username)
 
     def put(self, username):
+        db.put_user(username)
         return http_response(200)
 
 ############
