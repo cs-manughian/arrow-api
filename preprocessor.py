@@ -24,7 +24,7 @@ def tokenize(text):
     tokenized_sentences = []
     for sentence in sentences:
         # Lowercase the words and remove punctuation
-        tokenized_sent = sentence.translate(None, string.punctuation).lower()
+        tokenized_sent = sentence.translate(string.punctuation).lower()
         tokenized_sentences.append(tokenized_sent)
     return tokenized_sentences
 
