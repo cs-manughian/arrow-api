@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 import importlib
 import json
 
@@ -6,6 +7,7 @@ preprocessor = importlib.import_module('preprocessor')
 analyzer = importlib.import_module('analyzer')
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def homepage():

@@ -5,4 +5,5 @@ analyzer = SentimentIntensityAnalyzer()
 def get_sentiment_scores(sentence):
     score = analyzer.polarity_scores(sentence)
     result = "{:-<40} {}".format(sentence, str(score))
-    return(result)
+    print(result)
+    return(score)
